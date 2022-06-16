@@ -41,7 +41,7 @@ export default function LoginPage() {
           height="50"
           src="/resources/discord.png"
         />
-        <div>디스코드로 로그인하기2</div>
+        <div>디스코드로 로그인하기</div>
       </div>
     </StyledButton>
   );

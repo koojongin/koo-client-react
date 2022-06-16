@@ -47,8 +47,8 @@ export default function BattleContainer() {
     setMeResult(result);
   };
 
-  const loadAndSetInventoryData = async () => {
-    const result = await fetchInventory(selectedSortOption);
+  const loadAndSetInventoryData = async (sort = selectedSortOption) => {
+    const result = await fetchInventory(sort);
     setInventoryResult(() => ({ ...result }));
   };
 
@@ -63,6 +63,10 @@ export default function BattleContainer() {
     if (dropList.length > 0) await loadAndSetInventoryData();
   };
 
+  const onChangeSortSelection = (sortOption: InventorySortType) => {
+    setSelectedSortOption(sortOption);
+    // await loadAndSetInventoryData();
+  };
   const onClickAutoBattle = async () => {
     clearInterval(intervalId);
     if (isRunningAutoBattle) {
@@ -151,9 +155,14 @@ export default function BattleContainer() {
       <div style={{ width: 800 }}>
         <InventoryCard
           inventoryResult={inventoryResult}
-          onChangeSortSelection={sortOption =>
-            setSelectedSortOption(sortOption)
-          }
+          // onChangeSortSelection={async sortOption => {
+          //   setSelectedSortOption(sortOption);
+          //   await loadAndSetInventoryData();
+          // }}
+          onChangeSortSelection={data => {
+            console.log(data);
+            onChangeSortSelection(data);
+          }}
           onChangeInventory={loadAndSetUserData}
         />
       </div>

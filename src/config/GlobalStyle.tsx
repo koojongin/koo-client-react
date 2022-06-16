@@ -1,18 +1,9 @@
 import { createGlobalStyle, css, keyframes } from 'styled-components';
-import { Helmet } from 'react-helmet';
 import 'react-toastify/dist/ReactToastify.css';
 import 'tippy.js/dist/tippy.css';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import { ToastContainer } from 'react-toastify';
 
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { faFontAwesome, faTwitter } from '@fortawesome/free-brands-svg-icons';
-import Head from 'next/head';
-import Script from 'next/script';
 import { MAIN_COLOR } from './variables';
-
-library.add(fas, faTwitter, faFontAwesome);
 
 const animation = keyframes`
     from {
@@ -46,6 +37,9 @@ const GlobalStyle = createGlobalStyle`
     *, body {
         font-family: 'Nexon';
     }
+    body{
+      margin:0;
+    }
     
     hr{
       border-top: none;
@@ -66,32 +60,6 @@ const GlobalStyle = createGlobalStyle`
         padding:0;
       }
     }
-    
 `;
 
-export default function GlobalSetting() {
-  return (
-    <>
-      <Head>
-        <meta property="og:title" content="KOO ONLINE" />
-        <meta property="og:description" content="그냥 취미로 만드는 웹 게임" />
-        <meta
-          property="og:image"
-          content="https://cdn.discordapp.com/attachments/747691288890966057/752764267580620881/discord.png"
-        />
-
-        <title>KOO ONLINE</title>
-      </Head>
-      <Script src="https://kit.fontawesome.com/480ca21863.js" />
-      <Helmet>
-        <style>@import url(http://jiku90.com/fonts/font.css);</style>
-      </Helmet>
-      <GlobalStyle />
-      <ToastContainer
-        className="black-background"
-        bodyClassName="grow-font-size"
-        progressClassName="fancy-progress-bar"
-      />
-    </>
-  );
-}
+export default GlobalStyle;

@@ -8,7 +8,10 @@ interface ItemMode {
   value?: number;
 }
 export interface IItem {
-  name?: string;
+  id: string;
+  iType: string;
+  name: string;
+  gold: number;
 
   armor?: number;
   createdAt?: string;
@@ -21,10 +24,7 @@ export interface IItem {
   damageOfPhysical?: number;
   description?: string;
   evasion?: number;
-  gold?: number;
   grade?: string;
-  iType?: string;
-  id?: string;
   isInAuction?: boolean;
   isInInventory?: boolean;
   isOrigin?: boolean;

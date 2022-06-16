@@ -2,7 +2,7 @@ import Tippy from '@tippyjs/react';
 import styled from 'styled-components';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ResponseInventory } from '../interfaces/fetch-user.response';
 import ItemCard from './ItemCard';
 import { IItem } from '../interfaces/item';
@@ -161,22 +161,6 @@ export default function InventoryCard({
     return _grade;
   };
 
-  const loadAndSetInventory = async () => {
-    const result = await fetchInventory(selectedSortOption);
-    setInventoryResult(result);
-  };
-
-  const onChangeSortType = async (
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    const {
-      target: { value },
-    } = event;
-    setSelectedSortOption(value);
-    if (onChangeSortSelection) onChangeSortSelection(selectedSortOption);
-    await loadAndSetInventory();
-  };
-
   const onChangeGradeCheck = (
     event: React.ChangeEvent<HTMLInputElement>,
     index: number,
@@ -190,9 +174,29 @@ export default function InventoryCard({
     if (onChangeGradeSelection) onChangeGradeSelection(checkedState);
   };
 
+  const onChangeSortType = useCallback(
+    async (event: React.ChangeEvent<HTMLSelectElement>) => {
+      const {
+        target: { value },
+      } = event;
+      setSelectedSortOption(value);
+    },
+    [selectedSortOption],
+  );
+
+  const loadAndSetInventory = async () => {
+    const result = await fetchInventory(selectedSortOption);
+    setInventoryResult(result);
+  };
+
   useEffect(() => {
     setInventoryResult(passedInventoryResult);
   }, [passedInventoryResult]);
+
+  useEffect(() => {
+    if (onChangeSortSelection) onChangeSortSelection(selectedSortOption);
+    loadAndSetInventory().catch(console.error);
+  }, [selectedSortOption]);
 
   return (
     <StyledInventoryCard>
@@ -278,18 +282,19 @@ export default function InventoryCard({
               })
               .join(' ')}
           >
-            {inventoryResult?.items.map((item, index: number) => {
-              return (
-                <ItemBox
-                  key={`inventory-item-${index + 0}`}
-                  item={item}
-                  onClickEquipmentResult={async () => {
-                    await loadAndSetInventory();
-                    if (onChangeInventory) onChangeInventory();
-                  }}
-                />
-              );
-            })}
+            {inventoryResult &&
+              inventoryResult.items.map((item, index: number) => {
+                return (
+                  <ItemBox
+                    key={`inventory-item-${index + 0}`}
+                    item={item}
+                    onClickEquipmentResult={async () => {
+                      await loadAndSetInventory();
+                      if (onChangeInventory) onChangeInventory();
+                    }}
+                  />
+                );
+              })}
           </div>
         </div>
       </div>

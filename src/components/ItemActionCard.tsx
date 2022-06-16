@@ -5,6 +5,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import { IItem } from '../interfaces/item';
 import { fetchEquipItem, fetchUnequipItem } from '../services/user.service';
 import Button from './atoms/button';
+import { fetchSellItem } from '../services/game.service';
 
 const StyledItemActionCard = styled.div`
   *::selection {
@@ -31,56 +32,17 @@ const StyledConfirmModal = styled.div`
 `;
 function ConfirmModal(props: {
   onClose: () => void;
-  item: IItem;
   onConfirm?: () => void;
+  content: string | JSX.Element;
 }) {
-  const { onClose, item, onConfirm } = props;
-  const { name, id = '', iType = '' } = item;
+  const { content, onClose, onConfirm } = props;
   const onClickConfirm = async () => {
     onClose();
-    await fetchEquipItem({ itemId: id, itemType: iType });
     if (onConfirm) onConfirm();
   };
   return (
     <StyledConfirmModal>
-      <div style={{ fontSize: 18 }}>{name}(을/를) 착용 하시겠습니까?</div>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-        }}
-      >
-        <div
-          tabIndex={0}
-          role="button"
-          onClick={onClickConfirm}
-          style={{ marginRight: 5 }}
-        >
-          <Button style={{ lineHeight: 1 }}>확인</Button>
-        </div>
-        <div tabIndex={0} role="button" onClick={onClose}>
-          <Button style={{ lineHeight: 1 }}>취소</Button>
-        </div>
-      </div>
-    </StyledConfirmModal>
-  );
-}
-function UnequipConfirmModal(props: {
-  onClose: () => void;
-  item: IItem;
-  onConfirm?: (result?: boolean) => void;
-}) {
-  const { onClose, item, onConfirm } = props;
-  const { name, id = '', iType = '' } = item;
-  const onClickConfirm = async () => {
-    onClose();
-    await fetchUnequipItem({ itemId: id, itemType: iType });
-    if (onConfirm) onConfirm(true);
-  };
-  return (
-    <StyledConfirmModal>
-      <div style={{ fontSize: 18 }}>{name}(을/를) 착용해제 하시겠습니까?</div>
+      <div style={{ fontSize: 18 }}>{content}</div>
       <div
         style={{
           display: 'flex',
@@ -135,8 +97,11 @@ export default function ItemActionCard({
         return (
           <ConfirmModal
             onClose={onClose}
-            onConfirm={onClickEquipmentResult}
-            item={item}
+            onConfirm={async () => {
+              await fetchEquipItem({ itemId: item.id, itemType: item.iType });
+              if (onClickEquipmentResult) onClickEquipmentResult();
+            }}
+            content={`${item.name}(을/를) 착용 하시겠습니까?`}
           />
         );
       },
@@ -153,10 +118,41 @@ export default function ItemActionCard({
       // eslint-disable-next-line react/no-unstable-nested-components
       customUI: ({ onClose }) => {
         return (
-          <UnequipConfirmModal
+          <ConfirmModal
+            content={`${item.name}(을/를) 착용해제 하시겠습니까?`}
             onClose={onClose}
-            onConfirm={onClickUnequipmentResult}
-            item={item}
+            onConfirm={async () => {
+              await fetchUnequipItem({ itemId: item.id, itemType: item.iType });
+              if (onClickUnequipmentResult) onClickUnequipmentResult();
+            }}
+          />
+        );
+      },
+    });
+  };
+
+  const onClickSellItem = () => {
+    if (!parent.current) return;
+    const {
+      current: { _tippy: tippyInstance },
+    } = parent;
+    tippyInstance.unmount();
+    confirmAlert({
+      // eslint-disable-next-line react/no-unstable-nested-components
+      customUI: ({ onClose }) => {
+        return (
+          <ConfirmModal
+            content={
+              <div>
+                <div>{item.name}(을/를) 판매하시겠습니까?</div>
+                <div>판매가: {item.gold.toLocaleString()}</div>
+              </div>
+            }
+            onClose={onClose}
+            onConfirm={async () => {
+              await fetchSellItem(item.id);
+              if (onClickUnequipmentResult) onClickUnequipmentResult();
+            }}
           />
         );
       },
@@ -188,7 +184,16 @@ export default function ItemActionCard({
           착용해제
         </div>
       )}
-      {sell && <div>팔기</div>}
+      {sell && (
+        <div
+          className="btn-action"
+          onClick={onClickSellItem}
+          tabIndex={0}
+          role="button"
+        >
+          팔기
+        </div>
+      )}
     </StyledItemActionCard>
   );
 }

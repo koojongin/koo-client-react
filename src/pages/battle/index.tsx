@@ -1,14 +1,18 @@
 import styled from 'styled-components';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { IMap } from '../../interfaces/map';
 import { fetchMaps } from '../../services/game.service';
 import MapListContainer from '../../components/MapListContainer';
 import BattleContainer from '../../components/BattleContainer';
 import Button from '../../components/atoms/button';
 import SkillListContainer from '../../components/SkillListContainer';
-import GlobalStyle from '../../config/GlobalStyle';
+import { LAYOUT_MAX_WIDTH, LAYOUT_MIN_WIDTH } from '../../config/variables';
 
 const StyledElement = styled.div`
+  margin: auto;
+  min-width: ${LAYOUT_MIN_WIDTH}px;
+  max-width: ${LAYOUT_MAX_WIDTH}px;
+  padding: 5px;
   .area-one {
     .hide,
     .fixed-hide {
@@ -83,10 +87,8 @@ export default function BattlePage() {
     return setSelectedMenu(menu.name);
   };
 
-  useEffect(() => {}, []);
   return (
     <StyledElement>
-      <GlobalStyle />
       <div>
         {MENU_LIST.map((menu, index) => {
           return (

@@ -22,3 +22,13 @@ export const fetchBattle = (data: any) => {
     },
   );
 };
+
+export const fetchSellItem = (itemId: string) => {
+  return axios.get<never, ResponseFetchBattle>(
+    `${API_SERVER_URL}/item/sell/${itemId}`,
+    {
+      method: 'get',
+      headers: authHeader(),
+    },
+  );
+};
