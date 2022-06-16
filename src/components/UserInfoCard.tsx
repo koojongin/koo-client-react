@@ -9,7 +9,7 @@ import ItemCard from './ItemCard';
 import { getItemURL } from '../services/item.util';
 import ItemActionCard from './ItemActionCard';
 
-const getUserAvatarURL = (user: { userId: string; avatar: string }) => {
+export const getUserAvatarURL = (user: { userId: string; avatar: string }) => {
   if (user && user.userId && user.avatar) {
     return `${DISCORD_AVATAR_URL}${user.userId}/${user.avatar}.png`;
   }

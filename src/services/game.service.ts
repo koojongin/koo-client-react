@@ -3,6 +3,7 @@ import { API_SERVER_URL } from '../constants';
 import { ResponseFetchBattle } from '../interfaces/fetch-battle.response';
 import axios from './axios.interceptor';
 import { IMap } from '../interfaces/map';
+import { ResponseRanks } from '../interfaces/ranks.response';
 
 export const fetchMaps = () => {
   return axios.get<never, { gameMaps: IMap[] }>(
@@ -31,4 +32,11 @@ export const fetchSellItem = (itemId: string) => {
       headers: authHeader(),
     },
   );
+};
+
+export const fetchRank = () => {
+  return axios.get<never, ResponseRanks>(`${API_SERVER_URL}/ranks`, {
+    method: 'get',
+    headers: authHeader(),
+  });
 };

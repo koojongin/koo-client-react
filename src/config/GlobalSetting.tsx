@@ -49,7 +49,7 @@ function NavBar({ onNav = true }: { onNav?: boolean }) {
       <div
         style={{
           color: 'white',
-          margin: 'auto 5px',
+          margin: 'auto',
           minWidth: `${LAYOUT_MIN_WIDTH}px`,
           maxWidth: `${LAYOUT_MAX_WIDTH}px`,
           display: 'flex',
@@ -97,7 +97,7 @@ export default function GlobalSetting() {
     if (window.location.pathname !== '/') setOnNav(true);
 
     const params = getSearchParams();
-    if (params.token) {
+    if (params?.token) {
       window.localStorage.setItem('token', params.token);
       setToken(params.token);
       const url = new URL(window.location.href);

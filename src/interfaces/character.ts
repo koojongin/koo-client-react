@@ -1,5 +1,13 @@
 import { IItem } from './item';
 
+export interface IUser {
+  avatar: string;
+  createdAt: string;
+  id: string;
+  nickname: string;
+  userId: string;
+  username: string;
+}
 export interface ICharacter {
   id: string;
   _id: string;
@@ -25,8 +33,10 @@ export interface ICharacter {
   stackedInventoryId: string;
   token: string;
   tokenExpiredAt: string;
-  user: any;
+  user: IUser;
   userId: string;
+
+  calculatedCharacterData?: any;
 
   ///
   test: any;
