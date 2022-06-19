@@ -21,13 +21,13 @@ axios.interceptors.response.use(
     const { data, status } = response;
 
     if (status === 429) {
-      toast.info(
+      toast.error(
         '사냥시도가 너무 빠릅니다. 자동사냥을 위한 브라우저는 1개만 사용하시는 것을 권장합니다.',
       );
       return Promise.reject(error);
     }
     if (data?.message) {
-      toast.info(data.message);
+      toast.error(data.message);
       return Promise.reject(error);
     }
 

@@ -7,9 +7,11 @@ import styled from 'styled-components';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { faFontAwesome, faTwitter } from '@fortawesome/free-brands-svg-icons';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import io, { Socket } from 'socket.io-client';
 import { LAYOUT_MAX_WIDTH, LAYOUT_MIN_WIDTH } from './variables';
 import GlobalStyle from './GlobalStyle';
+import { SOCKET_EVENT, SOCKET_SERVER_URI } from '../constants';
 
 library.add(fas, faTwitter, faFontAwesome);
 const StyledNavBar = styled.div`
@@ -79,9 +81,9 @@ function NavBar({ onNav = true }: { onNav?: boolean }) {
     </StyledNavBar>
   );
 }
-export default function GlobalSetting() {
+
+export default function GlobalSetting({ children }: { children: any }) {
   const [onNav, setOnNav] = useState(false);
-  const [token, setToken] = useState('');
   const getSearchParams = () => {
     const params = window.location.search.substr(1).split('&');
     return params
@@ -99,11 +101,11 @@ export default function GlobalSetting() {
     const params = getSearchParams();
     if (params?.token) {
       window.localStorage.setItem('token', params.token);
-      setToken(params.token);
       const url = new URL(window.location.href);
       url.searchParams.delete('token');
+      window.location.href = '/';
     }
-  }, [token]);
+  }, []);
   return (
     <>
       <Head>
@@ -127,6 +129,7 @@ export default function GlobalSetting() {
       />
       <GlobalStyle />
       <NavBar onNav={onNav} />
+      {children}
     </>
   );
 }

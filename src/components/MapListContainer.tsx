@@ -51,11 +51,11 @@ function MonsterTooltip({ monster }: { monster: IMonster }) {
       </div>
       <hr style={{ borderColor: 'white' }} />
       <div>
-        {dropList.map(item => {
+        {dropList.map((item, index) => {
           const { name: itemName, rate } = item;
           return (
             <div
-              key={itemName}
+              key={`${itemName}-${index + 0}`}
               style={{ marginRight: 5, display: 'inline-flex' }}
             >
               {itemName}({rate}%)
@@ -92,12 +92,12 @@ export default function MapListContainer({ maps = [] }: MapListCardProps) {
       {maps.map((map: IMap) => {
         const { containMonsters: monsters } = map;
         const monstersElementList = _.sortBy(monsters, 'maxHP').map(monster => (
-          <div key={monster.name} style={{ marginRight: 5 }}>
+          <div key={`map-list-${monster.name}`} style={{ marginRight: 5 }}>
             <MonsterCard monster={monster} />
           </div>
         ));
         return (
-          <div key={`test-${map.id}`}>
+          <div key={map.id}>
             <div style={{ fontSize: 16, fontWeight: 'bold' }}>{map.name}</div>
             <div style={{ display: 'flex' }}>{monstersElementList}</div>
           </div>

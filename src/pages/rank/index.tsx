@@ -15,7 +15,6 @@ const StyledRank = styled.div`
 `;
 function RankPage() {
   const [ranks, setRanks] = useState<ResponseRanks>({ characters: [] });
-
   useEffect(() => {
     const loadRanks = async () => {
       const response = await fetchRank();
@@ -24,6 +23,7 @@ function RankPage() {
 
     loadRanks().catch(console.error);
   }, []);
+
   return (
     <StyledRank>
       <div
