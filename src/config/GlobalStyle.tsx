@@ -39,6 +39,7 @@ const GlobalStyle = createGlobalStyle`
     }
     body{
       margin:0;
+      min-width: min-content;
     }
     
     hr{

@@ -14,3 +14,4 @@ export const SOCKET_EVENT = {
   REFRESH_CONNECTED_USER: 'refresh:connectedUser',
   ON_SHARE_ITEM_LINK: 'client:shareItemLink',
 };
+export const CHAT_MESSAGE_MAX_LENGTH = 100;

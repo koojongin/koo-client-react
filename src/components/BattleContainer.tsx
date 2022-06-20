@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import moment from 'moment';
+import { useInterval } from 'usehooks-ts';
 import { fetchBattle, fetchMaps } from '../services/game.service';
 import { IMap } from '../interfaces/map';
 import { ResponseFetchBattle } from '../interfaces/fetch-battle.response';
 import { fetchInventory, fetchMe } from '../services/user.service';
-import { BATTLE_COOLTIME } from '../constants';
+import { BATTLE_COOLTIME, SOCKET_EVENT } from '../constants';
 import { WHITE_GRAY_COLOR } from '../config/variables';
 import Button from './atoms/button';
 import BattleLogCard from './BattleLogCard';
@@ -17,6 +18,7 @@ import {
 } from '../interfaces/fetch-user.response';
 import InventoryCard from './InventoryCard';
 import { InventorySortType } from '../interfaces/types';
+import { SocketContext } from '../context/SocketContext';
 
 const StyledBattleContainer = styled.div`
   select {
@@ -31,7 +33,7 @@ const StyledBattleContainer = styled.div`
 `;
 
 export default function BattleContainer() {
-  const [intervalId, setIntervalId] = useState(0);
+  const [socket] = useContext(SocketContext);
   const [isRunningAutoBattle, setIsRunningAutoBattle] = useState(false);
   const [maps = [], setMaps] = useState<IMap[]>();
   const [meResult, setMeResult] = useState<ResponseMe>();
@@ -58,7 +60,10 @@ export default function BattleContainer() {
     });
     setLastBattleResult({ timestamp: new Date(), ...response });
 
-    const { dropList } = response;
+    const { dropList, isLevelUp } = response;
+    if (isLevelUp) {
+      socket?.emit(SOCKET_EVENT.REFRESH_CONNECTED_USER);
+    }
     await loadAndSetUserData();
     if (dropList.length > 0) await loadAndSetInventoryData();
   };
@@ -68,18 +73,6 @@ export default function BattleContainer() {
     // await loadAndSetInventoryData();
   };
   const onClickAutoBattle = async () => {
-    clearInterval(intervalId);
-    if (isRunningAutoBattle) {
-      setIsRunningAutoBattle(false);
-      return;
-    }
-
-    await battle();
-    const interval: number = window.setInterval(async () => {
-      await battle();
-    }, BATTLE_COOLTIME);
-    setIntervalId(interval);
-
     setIsRunningAutoBattle(!isRunningAutoBattle);
   };
 
@@ -89,6 +82,16 @@ export default function BattleContainer() {
     } = event;
     setSelectedMap(value);
   };
+
+  useEffect(() => {
+    if (isRunningAutoBattle) battle();
+  }, [isRunningAutoBattle]);
+  useInterval(
+    async () => {
+      return battle();
+    },
+    isRunningAutoBattle ? BATTLE_COOLTIME : null,
+  );
 
   useEffect(() => {
     const loadMaps = async () => {
@@ -152,7 +155,7 @@ export default function BattleContainer() {
           </div>
         )}
       </div>
-      <div style={{ width: 800 }}>
+      <div style={{ minWidth: 400 }}>
         <InventoryCard
           inventoryResult={inventoryResult}
           // onChangeSortSelection={async sortOption => {

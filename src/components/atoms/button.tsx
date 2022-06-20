@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import React from 'react';
+import { MAIN_COLOR_LIGHT } from '../../config/variables';
 
 const StyledButton = styled.button`
-  background: #007bff;
+  background: ${MAIN_COLOR_LIGHT};
   color: white;
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;

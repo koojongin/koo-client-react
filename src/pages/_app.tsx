@@ -40,7 +40,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     <GlobalSetting>
       {/* eslint-disable-next-line react/jsx-no-constructed-context-values */}
       <SocketContext.Provider value={[socket]}>
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           {/* eslint-disable-next-line react/jsx-props-no-spreading */}
           <Component {...pageProps} />
           {/* eslint-disable-next-line react/jsx-props-no-spreading */}

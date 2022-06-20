@@ -7,11 +7,12 @@ import { getUserAvatarURL } from '../../components/UserInfoCard';
 import { LAYOUT_MAX_WIDTH, LAYOUT_MIN_WIDTH } from '../../config/variables';
 
 const StyledRank = styled.div`
-  margin: auto;
   min-width: ${LAYOUT_MIN_WIDTH}px;
+  width: ${LAYOUT_MIN_WIDTH}px;
   max-width: ${LAYOUT_MAX_WIDTH}px;
   padding: 5px;
   text-align: center;
+  box-sizing: border-box;
 `;
 function RankPage() {
   const [ranks, setRanks] = useState<ResponseRanks>({ characters: [] });

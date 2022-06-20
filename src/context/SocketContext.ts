@@ -1,5 +1,6 @@
 import { Socket } from 'socket.io-client';
 import { createContext } from 'react';
+import { toast } from 'react-toastify';
 import { SOCKET_EVENT } from '../constants';
 
 export const SocketContext = createContext<Array<Socket | undefined>>([]);
@@ -9,6 +10,10 @@ export function initSocketEvents(socket: Socket) {
     socket.on('connect', () => {
       socket.emit(SOCKET_EVENT.CLIENT_LOGIN);
       resolve(socket);
+    });
+
+    socket.on('connect_error', error => {
+      toast.error(error.message);
     });
   });
 }

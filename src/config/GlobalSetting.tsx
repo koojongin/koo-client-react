@@ -26,6 +26,9 @@ const StyledNavBar = styled.div`
     &:hover {
       background: rgba(255, 255, 255, 0.41);
     }
+    &:nth-child(1) {
+      margin-left: 5px;
+    }
   }
 `;
 

@@ -9,8 +9,12 @@ import SkillListContainer from '../../components/SkillListContainer';
 import { LAYOUT_MAX_WIDTH, LAYOUT_MIN_WIDTH } from '../../config/variables';
 
 const StyledElement = styled.div`
-  margin: auto;
   min-width: ${LAYOUT_MIN_WIDTH}px;
+  width: ${LAYOUT_MIN_WIDTH}px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
   max-width: ${LAYOUT_MAX_WIDTH}px;
   padding: 5px;
   .area-one {
