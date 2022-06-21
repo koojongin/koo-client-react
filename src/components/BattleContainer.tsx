@@ -151,12 +151,12 @@ export default function BattleContainer() {
           </div>
         )}
         {lastBattleResult && (
-          <div style={{ width: 400 }}>
+          <div style={{ marginLeft: 10, width: 400 }}>
             <BattleLogCard battleResult={lastBattleResult} />
           </div>
         )}
       </div>
-      <div style={{ minWidth: 400 }}>
+      <div style={{ minWidth: 400, marginTop: 10 }}>
         <InventoryCard
           inventoryResult={inventoryResult}
           // onChangeSortSelection={async sortOption => {

@@ -18,6 +18,19 @@ const animation = keyframes`
         text-shadow: 0 0 2px #fff, 0 0 3px #ff4da6, 0 0 4px #ff4da6, 0 0 5px #ff4da6, 0 0 6px #ff4da6, 0 0 7px #ff4da6, 0 0 8px #ff4da6;
     }
 `;
+
+const TippyCustomStyle = css`
+  .tippy-box {
+    max-width: inherit !important;
+    &.no-padding .tippy-content {
+      padding: 0;
+    }
+    &.no-border-radius {
+      border-radius: 0;
+    }
+  }
+`;
+
 const ToastCustomStyle = css`
   .Toastify__toast {
     min-height: 0px !important;
@@ -39,6 +52,7 @@ const ToastCustomStyle = css`
 
 const GlobalStyle = createGlobalStyle`
     ${ToastCustomStyle}
+    ${TippyCustomStyle}
     *, body {
         font-family: 'Nexon';
     }
@@ -75,6 +89,11 @@ const GlobalStyle = createGlobalStyle`
     }
     .item-color-rare{
       color:${ITEM_RARE_COLOR};
+    }
+
+    .hide,
+    .fixed-hide {
+      display: none;
     }
 `;
 

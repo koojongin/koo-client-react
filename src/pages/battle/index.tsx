@@ -17,12 +17,6 @@ const StyledElement = styled.div`
   box-sizing: border-box;
   max-width: ${LAYOUT_MAX_WIDTH}px;
   padding: 5px;
-  .area-one {
-    .hide,
-    .fixed-hide {
-      display: none;
-    }
-  }
 `;
 
 interface IBattleListMenu {
@@ -109,7 +103,7 @@ export default function BattlePage() {
           );
         })}
       </div>
-      <div className="area-one" style={{ marginBottom: 10 }}>
+      <div style={{ marginBottom: 10 }}>
         {MENU_LIST.map(menu => {
           const isShowCondition = selectedMenu === menu.name && !isFixedHide;
           return (

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
+import Image from 'next/image';
 import { SocketContext } from '../context/SocketContext';
 import { CHAT_MESSAGE_MAX_LENGTH } from '../constants';
 import { ICharacter } from '../interfaces/character';
@@ -15,25 +16,94 @@ import {
 } from '../constants/socket.event';
 import ItemCard from './ItemCard';
 import { IItem } from '../interfaces/item';
+import { getUserAvatarURL } from './UserInfoCard';
+import { getItemURL } from '../services/item.util';
+
+function UserProfileBox({ character }: { character: ICharacter }) {
+  const { user, equipedWeapon } = character;
+  return (
+    <div
+      style={{
+        minWidth: 300,
+        borderRadius: 5,
+        boxShadow: '1px 1px 6px 1px #b5aeae',
+      }}
+    >
+      <div style={{ display: 'flex', background: 'black', padding: 10 }}>
+        <div style={{ marginRight: 10 }}>
+          <Image
+            alt="user-avatar"
+            style={{ borderRadius: '50%' }}
+            width={50}
+            height={50}
+            src={getUserAvatarURL(user)}
+          />
+        </div>
+        <div style={{ fontSize: 20 }}>{user.username}</div>
+      </div>
+      <div style={{ background: 'white', color: `black`, padding: 10 }}>
+        <div>레벨 {character.level}</div>
+        {equipedWeapon && (
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Tippy placement="auto" content={ItemCard({ item: equipedWeapon })}>
+              <div
+                style={{
+                  cursor: 'pointer',
+                  position: 'relative',
+                  border: 'solid 1px',
+                  width: 40,
+                  height: 40,
+                }}
+              >
+                <Image
+                  alt={equipedWeapon.name}
+                  src={getItemURL(equipedWeapon.thumbnail)}
+                  layout="fill"
+                  objectFit="scale-down"
+                />
+              </div>
+            </Tippy>
+            <div style={{ marginLeft: 5 }}>{equipedWeapon.name}</div>
+          </div>
+        )}
+        {!equipedWeapon && (
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ minWidth: 40, minHeight: 40, border: 'solid 1px' }} />
+            <div style={{ marginLeft: 5 }}>미착용</div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 function UserNameBox({ character }: { character: ICharacter }) {
   const { user } = character;
   return (
-    <span style={{ cursor: 'pointer' }}>
-      <span
-        style={{
-          background: MAIN_COLOR_LIGHT,
-          color: 'white',
-          padding: '2px 4px',
-          borderRadius: 5,
-          marginRight: 3,
-          fontSize: 12,
-        }}
-      >
-        {character.level}
+    <Tippy
+      interactive
+      className="user-profile-tippy no-padding no-border-radius"
+      hideOnClick
+      arrow={false}
+      content={UserProfileBox({ character })}
+      trigger="click"
+    >
+      <span style={{ cursor: 'pointer' }}>
+        <span
+          style={{
+            background: MAIN_COLOR_LIGHT,
+            color: 'white',
+            padding: '2px 4px',
+            borderRadius: 5,
+            marginRight: 3,
+            fontSize: 12,
+          }}
+        >
+          {character.level}
+        </span>
+        <span>{user.username}</span>
       </span>
-      <span>{user.username}</span>
-    </span>
+    </Tippy>
   );
 }
 function DefaultMessageBox({ message }: { message: string | JSX.Element }) {
@@ -53,6 +123,7 @@ const StyledChatContainer = styled.div`
   box-sizing: border-box;
   border: solid 1px gainsboro;
   border-radius: 5px;
+  margin: 5px;
 
   input {
     border: none;
