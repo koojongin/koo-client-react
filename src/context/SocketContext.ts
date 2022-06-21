@@ -1,14 +1,23 @@
 import { Socket } from 'socket.io-client';
 import { createContext } from 'react';
 import { toast } from 'react-toastify';
-import { SOCKET_EVENT } from '../constants';
+import { CLIENT_LOGIN } from '../constants/socket.event';
 
-export const SocketContext = createContext<Array<Socket | undefined>>([]);
+interface ISocketProvider {
+  socket?: Socket;
+  connected: boolean;
+}
+
+const defaultSocketContext = {
+  connected: false,
+};
+export const SocketContext =
+  createContext<ISocketProvider>(defaultSocketContext);
 export const test = 1;
 export function initSocketEvents(socket: Socket) {
   return new Promise(resolve => {
     socket.on('connect', () => {
-      socket.emit(SOCKET_EVENT.CLIENT_LOGIN);
+      socket.emit(CLIENT_LOGIN);
       resolve(socket);
     });
 

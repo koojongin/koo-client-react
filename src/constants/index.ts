@@ -6,12 +6,4 @@ export const DISCORD_AVATAR_URL = 'https://cdn.discordapp.com/avatars/';
 export const DEFAULT_DISCORD_AVATAR_URL =
   'https://cdn.discordapp.com/embed/avatars/0.png';
 export const ITEM_GRADES = ['NORMAL', 'MAGIC', 'RARE'];
-export const SOCKET_EVENT = {
-  CLIENT_MESSAGE: 'client:message',
-  CLIENT_LOGIN: 'client:login',
-  ON_CONNECTED: 'client:connect',
-  ON_SERVER_UPDATE: 'update:version',
-  REFRESH_CONNECTED_USER: 'refresh:connectedUser',
-  ON_SHARE_ITEM_LINK: 'client:shareItemLink',
-};
 export const CHAT_MESSAGE_MAX_LENGTH = 100;

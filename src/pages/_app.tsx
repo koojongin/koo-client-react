@@ -17,7 +17,7 @@ type AppPropsWithLayout = AppProps & {
 };
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? (page => page);
-  const [socket, setSocket] = useState<Socket | any>();
+  const [socket, setSocket] = useState<Socket | undefined>();
   const [isConnectedSocket, setIsConnectedSocket] = useState(false);
   useEffect(() => {
     const token = window.localStorage.getItem('token');
@@ -36,10 +36,11 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       setIsConnectedSocket(true);
     });
   }, [socket, isConnectedSocket]);
+
   return getLayout(
     <GlobalSetting>
       {/* eslint-disable-next-line react/jsx-no-constructed-context-values */}
-      <SocketContext.Provider value={[socket]}>
+      <SocketContext.Provider value={{ socket, connected: isConnectedSocket }}>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           {/* eslint-disable-next-line react/jsx-props-no-spreading */}
           <Component {...pageProps} />

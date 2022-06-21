@@ -3,7 +3,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'tippy.js/dist/tippy.css';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-import { MAIN_COLOR } from './variables';
+import {
+  ITEM_MAGIC_COLOR,
+  ITEM_NORMAL_COLOR,
+  ITEM_RARE_COLOR,
+  MAIN_COLOR,
+} from './variables';
 
 const animation = keyframes`
     from {
@@ -60,6 +65,16 @@ const GlobalStyle = createGlobalStyle`
       .tippy-content{
         padding:0;
       }
+    }
+    
+    .item-color-normal{
+      color:${ITEM_NORMAL_COLOR};
+    }
+    .item-color-magic{
+      color:${ITEM_MAGIC_COLOR};
+    }
+    .item-color-rare{
+      color:${ITEM_RARE_COLOR};
     }
 `;
 

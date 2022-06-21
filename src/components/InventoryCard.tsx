@@ -87,9 +87,10 @@ function ItemBox({
       className={`grade-${item.grade?.toLowerCase()}`}
       style={{ position: 'relative' }}
     >
-      <Tippy placement="auto" content={ItemCard({ item })} zIndex={5}>
+      <Tippy placement="right" content={ItemCard({ item })} zIndex={4}>
         <div>
           <Tippy
+            placement="top"
             interactive
             hideOnClick
             className="item-action-card-tippy"
@@ -98,11 +99,12 @@ function ItemBox({
               parent: itemActionElementRef,
               equip: true,
               sell: true,
+              link: true,
               onClickEquipmentResult,
             })}
             arrow={false}
             ref={itemActionElementRef}
-            zIndex={10}
+            zIndex={5}
             trigger="click"
           >
             <div style={{ width: 40, height: 40, position: 'relative' }}>

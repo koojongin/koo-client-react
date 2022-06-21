@@ -7,7 +7,7 @@ import { fetchBattle, fetchMaps } from '../services/game.service';
 import { IMap } from '../interfaces/map';
 import { ResponseFetchBattle } from '../interfaces/fetch-battle.response';
 import { fetchInventory, fetchMe } from '../services/user.service';
-import { BATTLE_COOLTIME, SOCKET_EVENT } from '../constants';
+import { BATTLE_COOLTIME } from '../constants';
 import { WHITE_GRAY_COLOR } from '../config/variables';
 import Button from './atoms/button';
 import BattleLogCard from './BattleLogCard';
@@ -19,6 +19,7 @@ import {
 import InventoryCard from './InventoryCard';
 import { InventorySortType } from '../interfaces/types';
 import { SocketContext } from '../context/SocketContext';
+import { REFRESH_CONNECTED_USER } from '../constants/socket.event';
 
 const StyledBattleContainer = styled.div`
   select {
@@ -33,7 +34,7 @@ const StyledBattleContainer = styled.div`
 `;
 
 export default function BattleContainer() {
-  const [socket] = useContext(SocketContext);
+  const { socket } = useContext(SocketContext);
   const [isRunningAutoBattle, setIsRunningAutoBattle] = useState(false);
   const [maps = [], setMaps] = useState<IMap[]>();
   const [meResult, setMeResult] = useState<ResponseMe>();
@@ -62,7 +63,7 @@ export default function BattleContainer() {
 
     const { dropList, isLevelUp } = response;
     if (isLevelUp) {
-      socket?.emit(SOCKET_EVENT.REFRESH_CONNECTED_USER);
+      socket?.emit(REFRESH_CONNECTED_USER);
     }
     await loadAndSetUserData();
     if (dropList.length > 0) await loadAndSetInventoryData();

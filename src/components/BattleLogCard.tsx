@@ -28,12 +28,16 @@ const StyledBattleLogCard = styled.div`
   }
 
   .battle-log-wrapper {
-    padding-bottom: 5px;
+    padding-bottom: 13px;
     .battle-log-turn-box {
-      color: #212529;
       font-size: 12px;
       font-weight: bold;
       margin-bottom: 3px;
+      background: #2125296b;
+      color: white;
+      width: fit-content;
+      padding: 2px 4px;
+      border-radius: 5px;
     }
   }
 `;
@@ -83,7 +87,17 @@ export default function BattleLogCard({
             placeholder="empty"
           />
         </div>
-        <div>{monster.name}(을/를) 만났습니다.</div>
+        <div>
+          <div style={{ fontSize: 14 }}>
+            <span style={{ fontSize: 18, fontWeight: 'bold' }}>
+              {monster.name}
+            </span>
+            (을/를) 만났습니다.
+          </div>
+          <div style={{ fontSize: 14 }}>
+            HP: {monster.maxHP.toLocaleString()}
+          </div>
+        </div>
       </div>
       <div>
         {battleLogs.map(battleLog => {
@@ -95,7 +109,7 @@ export default function BattleLogCard({
               <div className="battle-log-turn-box">{battleLog.phase} Turn</div>
               <div className={battleLog.isCritical ? 'glow' : ''}>
                 <span>{battleLog.turnDamage.toFixed(2)}의 데미지!</span>
-                <span>
+                <span style={{ marginLeft: 5 }}>
                   [남은 적체력:{_.max([0, battleLog.monsterHP.toFixed(0)])}]
                 </span>
               </div>

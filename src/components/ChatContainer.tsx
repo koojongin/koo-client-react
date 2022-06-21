@@ -3,12 +3,40 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { SocketContext } from '../context/SocketContext';
-import { CHAT_MESSAGE_MAX_LENGTH, SOCKET_EVENT } from '../constants';
+import { CHAT_MESSAGE_MAX_LENGTH } from '../constants';
 import { ICharacter } from '../interfaces/character';
 import Button from './atoms/button';
 import { MAIN_COLOR_LIGHT } from '../config/variables';
+import {
+  CLIENT_LOGIN,
+  CLIENT_MESSAGE,
+  REFRESH_CONNECTED_USER,
+  SHARE_ITEM_LINK,
+} from '../constants/socket.event';
+import ItemCard from './ItemCard';
+import { IItem } from '../interfaces/item';
 
-function DefaultMessageBox({ message }: { message: string }) {
+function UserNameBox({ character }: { character: ICharacter }) {
+  const { user } = character;
+  return (
+    <span style={{ cursor: 'pointer' }}>
+      <span
+        style={{
+          background: MAIN_COLOR_LIGHT,
+          color: 'white',
+          padding: '2px 4px',
+          borderRadius: 5,
+          marginRight: 3,
+          fontSize: 12,
+        }}
+      >
+        {character.level}
+      </span>
+      <span>{user.username}</span>
+    </span>
+  );
+}
+function DefaultMessageBox({ message }: { message: string | JSX.Element }) {
   return (
     <span
       style={{
@@ -45,13 +73,13 @@ const StyledChatContainer = styled.div`
 `;
 
 interface IMessageWrapper {
-  message: string;
+  message: string | JSX.Element;
   character: ICharacter;
-  actionType?: 'base' | 'login' | string;
+  actionType?: 'base' | 'custon' | string;
   timestamp?: Date;
 }
 export default function ChatContainer() {
-  const [socket] = useContext(SocketContext);
+  const { socket, connected } = useContext(SocketContext);
   const [isChatMode, setIsChatMode] = useState(true);
   const [inputMessage, setInputMessage] = useState('');
   const [messageWraps, setMessageWraps] = useState<IMessageWrapper[]>([]);
@@ -60,7 +88,7 @@ export default function ChatContainer() {
 
   const sendMessage = (message: string) => {
     setInputMessage('');
-    socket?.emit(SOCKET_EVENT.CLIENT_MESSAGE, { message });
+    socket?.emit(CLIENT_MESSAGE, { message });
   };
 
   const onChangeMessageInput = (event: React.ChangeEvent) => {
@@ -86,14 +114,21 @@ export default function ChatContainer() {
       return mergedMessages;
     });
   };
+
   useEffect(() => {
-    socket?.on(SOCKET_EVENT.REFRESH_CONNECTED_USER, (data: any) => {
+    if (connected === false) return;
+    socket?.emit(REFRESH_CONNECTED_USER);
+  }, [connected]);
+
+  useEffect(() => {
+    if (!socket) return () => {};
+    socket.on(REFRESH_CONNECTED_USER, (data: any) => {
       const { connectedUsers: cu } = data;
       setConnectedUsers(cu);
     });
 
-    socket?.on(
-      SOCKET_EVENT.CLIENT_MESSAGE,
+    socket.on(
+      CLIENT_MESSAGE,
       (data: { message: string; character: ICharacter }) => {
         const { message, character } = data;
         addMessage({
@@ -104,27 +139,53 @@ export default function ChatContainer() {
       },
     );
 
-    socket?.on(SOCKET_EVENT.CLIENT_LOGIN, (data: { character: ICharacter }) => {
+    socket.on(CLIENT_LOGIN, (data: { character: ICharacter }) => {
       const { character } = data;
       const { user } = character;
       const messageWrap = {
         character,
-        actionType: 'login',
+        actionType: 'custom',
         message: `${user.username}님이 로그인하셨습니다.`,
       };
       addMessage(messageWrap);
     });
 
-    if (socket?.connected) {
-      socket?.emit(SOCKET_EVENT.REFRESH_CONNECTED_USER);
-    }
+    socket.on(
+      SHARE_ITEM_LINK,
+      (data: { character: ICharacter; item: IItem }) => {
+        const { character, item } = data;
+        const messageWrap = {
+          character,
+          actionType: 'custom',
+          message: (
+            <div>
+              <UserNameBox character={character} />
+              <span>: </span>
+              <Tippy placement="auto" content={ItemCard({ item })}>
+                <span
+                  style={{
+                    background: 'black',
+                    cursor: 'pointer',
+                    padding: '1px 2px',
+                  }}
+                  className={`item-color-${item.grade?.toLowerCase()}`}
+                >
+                  [{item.name}]
+                </span>
+              </Tippy>
+            </div>
+          ),
+        };
+        addMessage(messageWrap);
+      },
+    );
 
     return () => {
-      socket?.off(SOCKET_EVENT.REFRESH_CONNECTED_USER);
-      socket?.off(SOCKET_EVENT.CLIENT_MESSAGE);
-      socket?.off(SOCKET_EVENT.CLIENT_LOGIN);
+      socket.off(REFRESH_CONNECTED_USER);
+      socket.off(CLIENT_MESSAGE);
+      socket.off(CLIENT_LOGIN);
     };
-  }, [socket, socket?.connected]);
+  }, [socket]);
 
   useEffect(() => {
     if (!messageListElement?.current) return;
@@ -228,7 +289,6 @@ export default function ChatContainer() {
         >
           {messageWraps.map((messageWrap, index) => {
             const { actionType = 'base', message, character } = messageWrap;
-            const { user } = character;
             return (
               <div
                 key={`message-${character.id}-${index + 0}`}
@@ -236,27 +296,13 @@ export default function ChatContainer() {
               >
                 {actionType === 'base' && (
                   <div>
-                    <span style={{ cursor: 'pointer' }}>
-                      <span
-                        style={{
-                          background: MAIN_COLOR_LIGHT,
-                          color: 'white',
-                          padding: '2px 4px',
-                          borderRadius: 5,
-                          marginRight: 3,
-                          fontSize: 12,
-                        }}
-                      >
-                        {character.level}
-                      </span>
-                      <span>{user.username}</span>
-                    </span>
+                    <UserNameBox character={character} />
                     <span>: </span>
                     <DefaultMessageBox message={message} />
                   </div>
                 )}
 
-                {actionType === 'login' && (
+                {actionType === 'custom' && (
                   <div>
                     <DefaultMessageBox message={message} />
                   </div>

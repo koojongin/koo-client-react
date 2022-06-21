@@ -67,6 +67,8 @@ export default function ItemCard({ item }: { item: IItem }) {
     // reqLevel,
     createdAt,
     originItem,
+
+    calculatedCharacterData,
   } = item;
   const translateGrade = (_grade = 'normal') => {
     const lowerGrade = _grade.toLowerCase();
@@ -184,6 +186,20 @@ export default function ItemCard({ item }: { item: IItem }) {
             );
           })}
         </div>
+      )}
+
+      {calculatedCharacterData && calculatedCharacterData.averageDamage && (
+        <>
+          <div className="horizontal-row" />
+          <div className="item-option-row">
+            <div>착용시 전투력</div>
+            <div style={{ fontSize: 20, fontWeight: 'bold' }}>
+              {calculatedCharacterData?.averageDamage
+                .toFixed(2)
+                .toLocaleString()}
+            </div>
+          </div>
+        </>
       )}
     </StyledItemCard>
   );

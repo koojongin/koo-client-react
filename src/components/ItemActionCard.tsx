@@ -1,11 +1,13 @@
 import styled from 'styled-components';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Instance } from 'tippy.js';
 import { confirmAlert } from 'react-confirm-alert';
 import { IItem } from '../interfaces/item';
 import { fetchEquipItem, fetchUnequipItem } from '../services/user.service';
 import Button from './atoms/button';
 import { fetchSellItem } from '../services/game.service';
+import { SocketContext } from '../context/SocketContext';
+import { SHARE_ITEM_LINK } from '../constants/socket.event';
 
 const StyledItemActionCard = styled.div`
   *::selection {
@@ -72,19 +74,31 @@ export default function ItemActionCard({
   equip = false,
   unequip = false,
   sell = false,
+  link = false,
   onClickEquipmentResult,
   onClickUnequipmentResult,
 }: {
   equip?: boolean;
   unequip?: boolean;
   sell?: boolean;
+  link?: boolean;
   item: IItem;
   parent: React.MutableRefObject<{ _tippy: Instance } | null>;
   instance?: Instance | undefined;
   onClickEquipmentResult?: () => void;
   onClickUnequipmentResult?: () => void;
 }) {
+  const { socket } = useContext(SocketContext);
+
   const { name } = item;
+  const onClickLinkItem = () => {
+    if (!parent.current) return;
+    const {
+      current: { _tippy: tippyInstance },
+    } = parent;
+    tippyInstance.unmount();
+    socket?.emit(SHARE_ITEM_LINK, { itemId: item.id });
+  };
   const onClickEquipment = () => {
     if (!parent.current) return;
     const {
@@ -192,6 +206,16 @@ export default function ItemActionCard({
           role="button"
         >
           팔기
+        </div>
+      )}
+      {link && (
+        <div
+          className="btn-action"
+          onClick={onClickLinkItem}
+          tabIndex={0}
+          role="button"
+        >
+          아이템 링크
         </div>
       )}
     </StyledItemActionCard>
