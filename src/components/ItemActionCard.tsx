@@ -77,6 +77,7 @@ export default function ItemActionCard({
   link = false,
   onClickEquipmentResult,
   onClickUnequipmentResult,
+  onClickSellResult,
 }: {
   equip?: boolean;
   unequip?: boolean;
@@ -85,6 +86,7 @@ export default function ItemActionCard({
   item: IItem;
   parent: React.MutableRefObject<{ _tippy: Instance } | null>;
   instance?: Instance | undefined;
+  onClickSellResult?: () => void;
   onClickEquipmentResult?: () => void;
   onClickUnequipmentResult?: () => void;
 }) {
@@ -165,7 +167,7 @@ export default function ItemActionCard({
             onClose={onClose}
             onConfirm={async () => {
               await fetchSellItem(item.id);
-              if (onClickUnequipmentResult) onClickUnequipmentResult();
+              if (onClickSellResult) onClickSellResult();
             }}
           />
         );

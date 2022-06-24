@@ -75,9 +75,11 @@ const StyledItemBox = styled.div`
 function ItemBox({
   item,
   onClickEquipmentResult,
+  onClickSellResult,
 }: {
   item: IItem;
   onClickEquipmentResult?: (result?: boolean) => void;
+  onClickSellResult?: () => void;
 }) {
   const { iType, calculatedCharacterData } = item;
   const { averageDamage } = calculatedCharacterData;
@@ -101,6 +103,7 @@ function ItemBox({
               sell: true,
               link: true,
               onClickEquipmentResult,
+              onClickSellResult,
             })}
             arrow={false}
             ref={itemActionElementRef}
@@ -291,6 +294,10 @@ export default function InventoryCard({
                     key={`inventory-item-${index + 0}`}
                     item={item}
                     onClickEquipmentResult={async () => {
+                      await loadAndSetInventory();
+                      if (onChangeInventory) onChangeInventory();
+                    }}
+                    onClickSellResult={async () => {
                       await loadAndSetInventory();
                       if (onChangeInventory) onChangeInventory();
                     }}
