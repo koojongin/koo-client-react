@@ -22,6 +22,9 @@ const animation = keyframes`
 const TippyCustomStyle = css`
   .tippy-box {
     max-width: inherit !important;
+    &.background-transparent {
+      background: transparent;
+    }
     &.no-padding .tippy-content {
       padding: 0;
     }

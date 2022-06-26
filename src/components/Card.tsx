@@ -14,6 +14,7 @@ export enum CardNameEnum {
 }
 export type CardNameKind = typeof CardNameEnum;
 const StyledCard = styled.span`
+  position: relative;
   .card-box {
     border: 4px solid transparent;
     border-radius: 5px;
@@ -21,8 +22,10 @@ const StyledCard = styled.span`
     background-clip: content-box, border-box;
 
     &.tier-rare {
-      background-image: linear-gradient(#502b00, #ff4e00),
-        linear-gradient(to right, #7e3a00, #7d3a00, #a35c00);
+      background-image: linear-gradient(90deg, #f5f5f5 0, #e1e1e1 60%, #aaa),
+        linear-gradient(90deg, #dedede 0, #cacaca 60%, #969696);
+      //background-image: linear-gradient(#502b00, #ff4e00),
+      //  linear-gradient(to right, #7e3a00, #7d3a00, #a35c00);
     }
 
     &.tier-sr {
@@ -36,23 +39,31 @@ const StyledCard = styled.span`
           #f1c40f,
           #ffda00
         );
+      background-image: linear-gradient(90deg, #fff5b4 0, #ffcd68 60%, #ffb300),
+        linear-gradient(90deg, #ffeb69 0, #ffbf3f 75%, #f80);
       //box-shadow: 0 0 2px 0px #65d3ffaa, 0 0 2px 0px #ffcdf3aa,
       //  0 0 2px 0px #fbfcb9be;
     }
 
     &.tier-ssr {
-      background-image: linear-gradient(#ffffff, #ffffff),
+      background-image: linear-gradient(
+          90deg,
+          #e6ffb4 0,
+          #b4f6ff 25%,
+          #b4c7ff 50%,
+          #d6b4ff 75%,
+          #ffb4f3
+        ),
         linear-gradient(
-          137deg,
-          #ff8b88,
-          #2a51ff,
-          #ffa604aa,
-          #71ff00aa,
-          #65ffe5aa,
-          #1cbeffaa
+          90deg,
+          #2784ffc2 0,
+          #4dffe7 25%,
+          #6392ff 50%,
+          #cb63ff 75%,
+          #ff78ff
         );
-      box-shadow: 0 0 4px 0px #ff8b88, 0 0 4px 0px #ffa604aa,
-        0 0 4px 0px #a6ff5faa, 0 0 4px 0px #65ffe5aa, 0 0 4px 0px #1cbeffaa;
+      box-shadow: 0 0 4px 0px #fff7cc1f, 0 0 4px 0px #ffa6044d,
+        0 0 4px 0px #a6ff5f4d, 0 0 4px 0px #65ffe53d, 0 0 4px 0px #1cbeff69;
     }
   }
 `;
@@ -74,27 +85,37 @@ export default function Card({ card, style }: CardProps) {
   return (
     <StyledCard style={style}>
       <Tippy
-        className="no-padding no-border-radius"
+        className="no-padding no-border-radius background-transparent"
         content={<img height={300} src={`/resources/card/${name}.png`} />}
         placement="right-start"
+        trigger="click"
         arrow={false}
       >
-        <div
-          className={`card-box tier-${tier}`}
-          style={{
-            cursor: 'pointer',
-            position: 'relative',
-            width: 100,
-            height: 150,
-          }}
-        >
-          <Image
-            alt={name}
-            layout="fill"
-            objectFit="cover"
-            src={`/resources/card/${name}.card.png`}
-          />
-        </div>
+        <>
+          <div style={{ position: 'absolute', top: 0, left: 5, zIndex: 1 }}>
+            <Image
+              width="30"
+              height="30"
+              src={`/resources/card/grade/${tier}.png`}
+            />
+          </div>
+          <div
+            className={`card-box tier-${tier}`}
+            style={{
+              cursor: 'pointer',
+              position: 'relative',
+              width: 100,
+              height: 150,
+            }}
+          >
+            <Image
+              alt={name.toString()}
+              layout="fill"
+              objectFit="cover"
+              src={`/resources/card/${name}.card.png`}
+            />
+          </div>
+        </>
       </Tippy>
     </StyledCard>
   );

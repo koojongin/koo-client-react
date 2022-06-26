@@ -2,7 +2,7 @@ import React, { BaseSyntheticEvent, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
 import { LAYOUT_MAX_WIDTH, LAYOUT_MIN_WIDTH } from '../../config/variables';
-import Card, { CardNameEnum, CardNameKind } from '../../components/Card';
+import Card, { CardNameEnum } from '../../components/Card';
 
 const StyledLuckyDraw = styled.div`
   min-width: ${LAYOUT_MIN_WIDTH}px;
@@ -165,7 +165,7 @@ function LuckyDraw() {
         </div>
       </div>
 
-      <div>
+      <div className={`${!isWaitingDraw ? '' : 'hide'}`}>
         <div>드랍 목록</div>
         <div style={{ display: 'inline-flex', flexFlow: 'wrap' }}>
           {dropList.map((card, index) => {
