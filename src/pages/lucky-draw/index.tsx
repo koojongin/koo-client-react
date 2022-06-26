@@ -61,7 +61,7 @@ function LuckyDraw() {
 
   const getRandomCard = () => {
     const cardNames = Object.values(CardNameEnum);
-    const tiers = ['rare', 'sr', 'ssr'];
+    const tiers = ['r', 'sr', 'ssr'];
     const [randomTier] = _.shuffle(tiers);
     const [randomCardName] = _.shuffle(cardNames);
     return {

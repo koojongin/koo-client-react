@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
 import Tippy from '@tippyjs/react';
+import { ICard } from 'koo-common-lib';
 
 export enum CardNameEnum {
   NIDALEE = 'nidalee',
@@ -21,7 +22,7 @@ const StyledCard = styled.span`
     background-origin: border-box;
     background-clip: content-box, border-box;
 
-    &.tier-rare {
+    &.tier-r {
       background-image: linear-gradient(90deg, #f5f5f5 0, #e1e1e1 60%, #aaa),
         linear-gradient(90deg, #dedede 0, #cacaca 60%, #969696);
       //background-image: linear-gradient(#502b00, #ff4e00),
@@ -67,11 +68,6 @@ const StyledCard = styled.span`
     }
   }
 `;
-
-export interface ICard {
-  name: CardNameKind | string;
-  tier: string;
-}
 
 interface CardProps
   extends React.DetailedHTMLProps<

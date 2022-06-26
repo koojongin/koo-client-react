@@ -20,6 +20,7 @@
     "@types/react-dom": "^18.0.5",
     "axios": "^0.27.2",
     "babel-plugin-macros": "^3.1.0",
+    "koo-common-lib": "github:koojongin/koo-common-lib",
     "lodash": "^4.17.21",
     "moment": "^2.29.3",
     "next": "^12.1.6",
